@@ -1,5 +1,6 @@
 package life.majiang.community.dto;
 
+//类与类之间之间传输用DTO对象
 public class AccessTokenDTO {
     private String client_id;
     private String client_secret;
