@@ -5,15 +5,15 @@ import lombok.Data;
 
 @Data
 public class QuestionDTO {
-    private int id;
+    private Integer id;
     private String title;
     private String description;
     private String tag;
     private Long gmtCreate;
     private Long gmtModified;
-    private int creator;
-    private int viewCount;
-    private int commentCount;
-    private int likeCount;
+    private Integer creator;
+    private Integer viewCount;
+    private Integer commentCount;
+    private Integer likeCount;
     private User user;
 }

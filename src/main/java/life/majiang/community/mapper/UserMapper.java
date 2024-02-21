@@ -17,5 +17,5 @@ public interface UserMapper {
     User findByToken(@Param("token") String token);//@Select中的#{}内的参数，会将下面这个方法中的形参自动传进去（只有参数是-类对象-的时候会自动传，不是的时候，就如这行所写，需要加@Param的注解）
 
     @Select("select * from user where id = #{id}")
-    User findById(@Param("id") int id);
+    User findById(@Param("id") Integer id);
 }
