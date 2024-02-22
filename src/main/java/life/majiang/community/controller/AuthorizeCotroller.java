@@ -5,12 +5,14 @@ import life.majiang.community.dto.GithubUser;
 import life.majiang.community.mapper.UserMapper;
 import life.majiang.community.model.User;
 import life.majiang.community.provider.GithubProvider;
+import life.majiang.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
@@ -30,9 +32,9 @@ public class AuthorizeCotroller {
     private String redirectUri;
 
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
 
-    @GetMapping("/callback")
+    @GetMapping("/callback")//用户做登陆操作时
     public String callback(@RequestParam(name="code") String code,
                            @RequestParam(name="state") String state,
                            HttpServletResponse response){//使用HttpServletRequest后，Springboot会自动将上下文中的request传进来。而session就是在request当中的。
@@ -50,15 +52,24 @@ public class AuthorizeCotroller {
             user.setToken(token);
             user.setName(githubUser.getName());
             user.setAccountId(String.valueOf(githubUser.getId()));
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(githubUser.getAvatarUrl());
-            userMapper.insert(user);
+            userService.createOrUpdate(user);
             response.addCookie(new Cookie("token",token));
             return "redirect:/";
         }else {
             //不成功，重新登陆
             return "redirect:/";
         }
+    }
+
+    @GetMapping("/logout")//用户做退出操作时
+    public String logout(HttpServletRequest request,//清除session，需要把request拿进来
+                         HttpServletResponse response){//清除cookie，response拿进来
+        request.getSession().removeAttribute("user");
+        //删除cookie方法：创建一个同名cookie，并立即将其生命周期设置为0
+        Cookie cookie = new Cookie("token",null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 }
