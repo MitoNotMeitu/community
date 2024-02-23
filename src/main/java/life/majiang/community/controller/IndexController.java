@@ -16,11 +16,12 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(Model model,
-                        @RequestParam(name = "page",defaultValue = "1") Integer page,//page代表每一页的页码
-                        @RequestParam(name = "size",defaultValue = "5") Integer size) {//size代表每页多少内容
+                        @RequestParam(name = "page", defaultValue = "1") Integer page,//page代表每一页的页码
+                        @RequestParam(name = "size", defaultValue = "5") Integer size) {//size代表每页多少内容
 
 
-        PaginationDTO pagination = questionService.list(page,size);
-        model.addAttribute("pagination",pagination);//把这些东西都装到model里，这样前端可以调用显示
-        return "index"; }
+        PaginationDTO pagination = questionService.list(page, size);
+        model.addAttribute("pagination", pagination);//把这些东西都装到model里，这样前端可以调用显示
+        return "index";
+    }
 }
