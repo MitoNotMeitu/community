@@ -9,6 +9,17 @@
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/bootstrap.min.js" type="application/javascript"></script>
 </head>
+<script type="application/javascript">
+    // 加载页面时执行的函数：如果用户是在评论区未登录状态下，跳转至主页面进行登录的，那么此时应自动删除多余的主页面
+    window.onload = function () {
+        var closable = window.localStorage.getItem("closable");//获取指示值，以进行判断
+        if (closable == "true") {//指示删掉当前页面。特别注意：存入localStorage的“值”，取出时都会作为字符串取出，所以这行要==的是字符串的true
+            window.close();
+            //记得除非手动删除不然localStorage里的值不会过期。删除的目的是以免由于未清空数据的关系一般登录时页面也被关闭
+            window.localStorage.removeItem("closable");
+        }
+    }
+</script>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
 <div class="container-fluid main">
