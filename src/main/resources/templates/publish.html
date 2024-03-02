@@ -11,6 +11,9 @@
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
     <script src="/js/community.js" type="application/javascript"></script>
     <script src="/js/editormd.min.js" type="application/javascript"></script>
+<!--
+    <script src="/js/plugins/image-dialog/image-dialog.js"></script>
+-->
 </head>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
@@ -41,9 +44,11 @@
                             height: 350,
                             path: "/js/lib/",
                             delay: 0,
-                            watch:false,
-                            placeholder:"请输入问题描述......",
-
+                            watch: false,
+                            placeholder: "请输入问题描述",
+                            imageUpload: true,
+                            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                            imageUploadURL: "/file/upload",
                         });
                     });
                 </script>
