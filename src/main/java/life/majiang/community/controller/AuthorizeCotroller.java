@@ -2,10 +2,10 @@ package life.majiang.community.controller;
 
 import life.majiang.community.dto.AccessTokenDTO;
 import life.majiang.community.dto.GithubUser;
-import life.majiang.community.mapper.UserMapper;
 import life.majiang.community.model.User;
 import life.majiang.community.provider.GithubProvider;
 import life.majiang.community.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Controller
+@Slf4j
 public class AuthorizeCotroller {
 
     @Autowired//GithubProvider中由于注解了@Component，所以这里直接注解Autowired就可以直接用了，不用再去new。
@@ -58,6 +59,7 @@ public class AuthorizeCotroller {
             response.addCookie(new Cookie("token", token));
             return "redirect:/";
         } else {
+            log.error("callback get github error,{}",githubUser);
             //不成功，重新登陆
             return "redirect:/";
         }

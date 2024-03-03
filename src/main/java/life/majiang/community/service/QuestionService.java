@@ -2,6 +2,7 @@ package life.majiang.community.service;
 
 import life.majiang.community.dto.PaginationDTO;
 import life.majiang.community.dto.QuestionDTO;
+import life.majiang.community.dto.QuestionQueryDTO;
 import life.majiang.community.exception.CustomizeErrorCode;
 import life.majiang.community.exception.CustomizeException;
 import life.majiang.community.mapper.QuestionExtMapper;
@@ -14,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,12 +35,20 @@ public class QuestionService {
     @Autowired
     private UserMapper userMapper;
 
-    public PaginationDTO list(Integer page, Integer size) {
+    public PaginationDTO list(String search, Integer page, Integer size) {
+
+        if (StringUtils.isNotBlank(search)) {
+
+            String[] tags = StringUtils.split(search, " ");
+            search = Arrays.stream(tags).collect(Collectors.joining("|"));
+        }
 
         PaginationDTO paginationDTO = new PaginationDTO();
         Integer totalPage;
 
-        Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());//拿到数据库中的数据总数
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setSearch(search);
+        Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);//拿到数据库中的数据总数
 
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
@@ -58,11 +66,12 @@ public class QuestionService {
         }
 
         paginationDTO.setPagination(totalPage, page);
-        //5*(i-1)   size*(page-1)
         Integer offset = size * (page - 1);
         QuestionExample questionExample = new QuestionExample();
         questionExample.setOrderByClause("gmt_create desc");
-        List<Question> questions = questionMapper.selectByExampleWithRowbounds(questionExample, new RowBounds(offset, size));
+        questionQueryDTO.setSize(size);
+        questionQueryDTO.setPage(offset);
+        List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
         for (Question question : questions) {

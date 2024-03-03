@@ -131,3 +131,9 @@ body {
 .menu .icon:hover {
     color: #499ef3;
 }
+
+.footer{
+    padding-bottom: 30px;
+    color: #666666;
+    text-align: center;
+}
