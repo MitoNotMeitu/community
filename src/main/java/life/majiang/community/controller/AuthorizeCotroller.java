@@ -59,7 +59,7 @@ public class AuthorizeCotroller {
             response.addCookie(new Cookie("token", token));
             return "redirect:/";
         } else {
-            log.error("callback get github error,{}",githubUser);
+            log.error("callback get github error,{}", githubUser);
             //不成功，重新登陆
             return "redirect:/";
         }
